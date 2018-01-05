@@ -6,6 +6,7 @@ RESTful API for user authentication
 <img src="https://img.shields.io/badge/Language-%20JavaScript%20-f9e229.svg">
 
 # Endpoints
+
 * POST `api/v1/user/signUp`
 * POST `api/v1/user/signIn`
 * GET `api/v1/user/{id}`
@@ -22,12 +23,9 @@ RESTful API for user authentication
 
 ## Dev dependencies
 
-* babel
-* chai
+* jest
 * eslint
-* mocha
 * nodemon
-
 
 ## License
 
