@@ -1,0 +1,52 @@
+{
+  "name": "express-user-api",
+  "version": "1.0.0",
+  "description": "RESTful API for user authentication",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "jest",
+    "dev": "nodemon --exec npm start",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onildoaguiar/express-user-api.git"
+  },
+  "keywords": [
+    "api",
+    "user",
+    "authentication",
+    "express",
+    "node",
+    "javascript"
+  ],
+  "author": "Onildo Aguiar <onildo.aguiar@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/onildoaguiar/express-user-api/issues"
+  },
+  "homepage": "https://github.com/onildoaguiar/express-user-api#readme",
+  "dependencies": {
+    "crypto-js": "^3.1.9-1",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.1.0",
+    "mongoose": "^4.13.9"
+  },
+  "devDependencies": {
+    "eslint": "^4.14.0",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "jest": "^22.0.4",
+    "nodemon": "^1.14.5",
+    "supertest": "^3.0.0"
+  }
+}

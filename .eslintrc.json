@@ -1,0 +1,14 @@
+{
+    "extends": "standard",
+    "env": {
+        "node": true,
+        "es6": true,
+        "jest": true
+    },
+    "rules": {
+        "semi": ["error", "always"],
+        "no-tabs": "off",
+        "no-console": "error",
+		"indent": ["error", "tab", { "SwitchCase": 1 }]
+    }
+}
