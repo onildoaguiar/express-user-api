@@ -16,16 +16,20 @@ RESTful API for user authentication
 # Stack
 ## Dependencies
 
-* node 8.9.3 (lts)
-* npm 5.5.1
+* node 8.9.4 (lts)
 * express
 * mongoose
+* body-parser
+* crypto-js
+* jsonwebtoken
 
 ## Dev dependencies
 
 * jest
 * eslint
+* eslint-config-standard
 * nodemon
+* supertest
 
 ## License
 
