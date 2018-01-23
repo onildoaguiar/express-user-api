@@ -1,61 +1,77 @@
 'use strict';
 
-// const boom = require('boom');
 const sha256 = require('crypto-js/sha256');
 const jwt = require('jsonwebtoken');
 const User = require('./model');
+const Config = require('../config/env');
+const TokenExpiredError = jwt.TokenExpiredError;
 
-module.exports.signUp = async (request, h) => {
-	const user = new User(request.payload);
+module.exports.signUp = async (req, res) => {
+	const user = new User(req.body);
 	user.password = sha256(user.password);
 
 	try {
 		await user.save();
-		return { user };
+		res.send({ user });
 	} catch (err) {
-		// throw boom.badRequest(err.message);
+		res.sendStatus(400);
 	}
 };
 
-module.exports.signIn = async (request, h) => {
-	let { password, email } = request.payload;
+module.exports.signIn = async (req, res) => {
+	let { password, email } = req.body;
 	password = sha256(password).toString();
 
 	try {
 		const user = await User.findOne({ email, password, active: true });
-		const token = jwt.sign(user.toJSON(), 'secret');
-		return { token };
+		const token = jwt.sign(user.toJSON(), Config.token.secret, { expiresIn: '30m' });
+		res.send({ token });
 	} catch (err) {
-		// throw boom.badRequest('Invalid email or password' + err);
+		res.sendStatus(400);
 	}
 };
 
-module.exports.getById = async (request, h) => {
-	let id = request.params.id;
+module.exports.getById = async (req, res) => {
+	let id = req.params.id;
 
 	try {
-		return await User.findOne({ _id: id, active: true });
+		jwt.verify(req.token, Config.token.secret);
+		res.send(await User.findOne({ _id: id, active: true }));
 	} catch (err) {
-		// throw boom.badRequest(err);
+		if (err instanceof TokenExpiredError) {
+			res.status(401).send({ message: 'Invalid Session' });
+		} else {
+			res.sendStatus(401);
+		}
 	}
 };
 
-module.exports.update = async (request, h) => {
-	let id = request.params.id;
+module.exports.update = async (req, res) => {
+	let id = req.params.id;
 
 	try {
-		return await User.findOne({ _id: id });
+		jwt.verify(req.token, Config.token.secret);
+		res.send(await User.findOne({ _id: id }));
 	} catch (err) {
-		// throw boom.badRequest(err);
+		if (err instanceof TokenExpiredError) {
+			res.status(401).send({ message: 'Invalid Session' });
+		} else {
+			res.sendStatus(401);
+		}
 	}
 };
 
-module.exports.delete = async (request, h) => {
-	let id = request.params.id;
+module.exports.delete = async (req, res) => {
+	let id = req.params.id;
 
 	try {
-		return await User.findOne({ _id: id });
+		jwt.verify(req.token, Config.token.secret);
+		res.send(await User.findOne({ _id: id }));
 	} catch (err) {
-		// throw boom.badRequest(err);
+		if (err instanceof TokenExpiredError) {
+			res.status(401).send({ message: 'Invalid Session' });
+		} else {
+			res.sendStatus(401);
+		}
 	}
 };
