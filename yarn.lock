@@ -1261,6 +1261,10 @@ expect@^22.1.0:
     jest-message-util "^22.1.0"
     jest-regex-util "^22.1.0"
 
+express-authorization-bearer@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/express-authorization-bearer/-/express-authorization-bearer-1.0.0.tgz#78049fe62983ad0022be0cc17db4e939998bfc3a"
+
 express@^4.16.2:
   version "4.16.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.16.2.tgz#e35c6dfe2d64b7dca0a5cd4f21781be3299e076c"

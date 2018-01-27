@@ -24,6 +24,7 @@ RESTful API for user authentication
 * body-parser
 * crypto-js
 * jsonwebtoken
+* express-authorization-bearer
 
 ## Dev dependencies
 
