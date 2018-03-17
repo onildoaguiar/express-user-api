@@ -1,77 +1,73 @@
-'use strict';
+'use strict'
 
-const sha256 = require('crypto-js/sha256');
-const jwt = require('jsonwebtoken');
-const User = require('./model');
-const Config = require('../config/env');
-const TokenExpiredError = jwt.TokenExpiredError;
+const Sha256 = require('crypto-js/sha256')
+const Jwt = require('jsonwebtoken')
+const User = require('./model')
+const Config = require('../config/env')
+const TokenExpiredError = Jwt.TokenExpiredError
 
-module.exports.signUp = async (req, res) => {
-	const user = new User(req.body);
-	user.password = sha256(user.password);
+module.exports.signUp = (req, res) =>
+  (new User(req.body).password = Sha256(req.body.password))
+    .save()
+    .then(res.send)
+    .catch(err => res.status(400).send({ message: err }))
 
-	try {
-		await user.save();
-		res.send({ user });
-	} catch (err) {
-		res.sendStatus(400);
-	}
-};
+module.exports.signIn = (req, res) =>
+  User
+    .findOne({ email: req.body.email, password: Sha256(req.body.password).toString(), active: true }, (err, doc) => {
+      if (err && doc === null) {
+        return res.status(404).send({ message: 'User not found' })
+      }
+      Jwt
+        .sign(doc.toJSON(), Config.token.secret, { expiresIn: '30m' }, (err, token) => {
+          if (err) {
+            return res.status(500).send({ message: 'Error while generating token' })
+          }
+          res.send({ token })
+        })
+    })
 
-module.exports.signIn = async (req, res) => {
-	let { password, email } = req.body;
-	password = sha256(password).toString();
+module.exports.byId = (req, res) =>
+  Jwt
+    .verify(req.token, Config.token.secret, err => {
+      if (err instanceof TokenExpiredError) {
+        return res.status(401).send({ message: 'Invalid Session' })
+      }
+      User
+        .findOne({ _id: req.params.id, active: true }, (err, doc) => {
+          if (err) {
+            return res.status(404).send({ message: 'User not found' })
+          }
+          res.send(doc)
+        })
+    })
 
-	try {
-		const user = await User.findOne({ email, password, active: true });
-		const token = jwt.sign(user.toJSON(), Config.token.secret, { expiresIn: '30m' });
-		res.send({ token });
-	} catch (err) {
-		res.sendStatus(400);
-	}
-};
+module.exports.update = (req, res) =>
+  Jwt
+    .verify(req.token, Config.token.secret, err => {
+      if (err instanceof TokenExpiredError) {
+        return res.status(401).send({ message: 'Invalid Session' })
+      }
+      User
+        .findOneAndUpdate({ _id: req.params.id, active: true }, req.body, { new: true }, (err, doc) => {
+          if (err) {
+            return res.status(500).send({ message: 'Error while updating' })
+          }
+          res.send(doc)
+        })
+    })
 
-module.exports.getById = async (req, res) => {
-	let id = req.params.id;
-
-	try {
-		jwt.verify(req.token, Config.token.secret);
-		res.send(await User.findOne({ _id: id, active: true }));
-	} catch (err) {
-		if (err instanceof TokenExpiredError) {
-			res.status(401).send({ message: 'Invalid Session' });
-		} else {
-			res.sendStatus(401);
-		}
-	}
-};
-
-module.exports.update = async (req, res) => {
-	let id = req.params.id;
-
-	try {
-		jwt.verify(req.token, Config.token.secret);
-		res.send(await User.findOne({ _id: id }));
-	} catch (err) {
-		if (err instanceof TokenExpiredError) {
-			res.status(401).send({ message: 'Invalid Session' });
-		} else {
-			res.sendStatus(401);
-		}
-	}
-};
-
-module.exports.delete = async (req, res) => {
-	let id = req.params.id;
-
-	try {
-		jwt.verify(req.token, Config.token.secret);
-		res.send(await User.findOne({ _id: id }));
-	} catch (err) {
-		if (err instanceof TokenExpiredError) {
-			res.status(401).send({ message: 'Invalid Session' });
-		} else {
-			res.sendStatus(401);
-		}
-	}
-};
+module.exports.delete = (req, res) =>
+  Jwt
+    .verify(req.token, Config.token.secret, err => {
+      if (err instanceof TokenExpiredError) {
+        return res.status(401).send({ message: 'Invalid Session' })
+      }
+      User
+        .findOneAndUpdate({ _id: req.params.id, active: true }, { active: false }, err => {
+          if (err) {
+            return res.status(500).send({ message: 'Error while deleting' })
+          }
+          res.send({ message: `User id: ${req.params.id} was deleted` })
+        })
+    })

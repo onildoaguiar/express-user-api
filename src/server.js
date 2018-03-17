@@ -1,13 +1,12 @@
-'use strict';
+'use strict'
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const Routes = require('./user/routes');
+const Express = require('express')
+const BodyParser = require('body-parser')
+const Routes = require('./user/routes')
 
-const server = express();
+const Server = Express()
 
-module.exports = async () => {
-	server.use(bodyParser.json());
-	server.use('/', Routes);
-	return server;
-};
+module.exports = () =>
+  Server
+    .use(BodyParser.json())
+    .use('/', Routes)
