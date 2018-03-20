@@ -3,12 +3,10 @@
 const supertest = require('supertest')
 const Server = require('../server')
 const Database = require('../config/database')
+const Fixtures = require('./__fixtures__')
 
 describe('User Authentication', () => {
-  const email = 'onildo.aguiar@gmail.com'
-  const password = 'adm123'
-  const wrongPassword = 'adm1234'
-  let request
+  let request;
 
   beforeAll(async () => {
     await Database.connect()
@@ -19,14 +17,14 @@ describe('User Authentication', () => {
   it('Should return "200" for a successful login', async () => {
     await request
       .post('/api/v1/user/signIn')
-      .send({ email, password })
+      .send({ email: Fixtures.user.email, password: Fixtures.user.password })
       .expect(200)
   })
 
   it('Should return "400" for an unsuccessful login', async () => {
     await request
       .post('/api/v1/user/signIn')
-      .send({ email, wrongPassword })
+      .send({ email: Fixtures.user.email, wrongPassword: Fixtures.user.wrongPassword })
       .expect(400)
   })
 })
