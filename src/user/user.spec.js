@@ -6,7 +6,7 @@ const Database = require('../config/database')
 const Fixtures = require('./__fixtures__')
 
 describe('User Authentication', () => {
-  let request;
+  let request
 
   beforeAll(async () => {
     await Database.connect()

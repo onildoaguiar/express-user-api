@@ -1,7 +1,7 @@
 {
   "name": "express-user-api",
   "version": "1.0.0",
-  "description": "RESTful API for user authentication",
+  "description": "RESTful API for user authentication.",
   "main": "index.js",
   "directories": {
     "test": "test"

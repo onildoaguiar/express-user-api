@@ -64,7 +64,7 @@ module.exports.delete = (req, res) =>
     })
   })
 
-const createUser = (req) => {
+const createUser = req => {
   const user = new User(req.body)
   user.password = Sha256(req.body.password)
   return user
