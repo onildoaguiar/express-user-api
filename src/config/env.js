@@ -1,8 +1,8 @@
 'use strict'
 
-const dotenv = require('dotenv')
+const Dotenv = require('dotenv')
 
-dotenv.config()
+Dotenv.config()
 
 module.exports = {
   server: {

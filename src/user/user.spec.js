@@ -1,6 +1,6 @@
 'use strict'
 
-const supertest = require('supertest')
+const Supertest = require('supertest')
 const Server = require('../server')
 const Database = require('../config/database')
 const Fixtures = require('./__fixtures__')
@@ -11,7 +11,7 @@ describe('User Authentication', () => {
   beforeAll(async () => {
     await Database.connect()
     const server = await Server()
-    request = supertest(server)
+    request = Supertest(server)
   })
 
   it('Should return "200" for a successful login', async () => {
